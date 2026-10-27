@@ -10,12 +10,12 @@ sacadas del framework para que puedas testearlas aisladas.
 """
 
 
-def scope_allows_write(scope: str) -> bool:
+def scope_allows_WRITE(scope: str) -> bool:
     """True si el scope del token incluye "write".
 
     "read write" -> True ; "read" -> False
     """
-    return "write" in scope.split()
+    return "WRITE" in scope.split()
 
 
 def can_manage_users(role: str) -> bool:
@@ -39,4 +39,7 @@ def can_edit(owner_id: int, user_id: int, role: str) -> bool:
     object-level access control: el dueño siempre puede sobre lo suyo;
     un admin puede sobre cualquier documento de su empresa.
     """
+    return owner_id == user_id or role == "admin"
+
+def can_publish(owner_id: int, user_id: int, role: str) -> bool:
     return owner_id == user_id or role == "admin"
