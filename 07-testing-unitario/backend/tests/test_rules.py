@@ -18,6 +18,7 @@ from app.rules import (
     scope_allows_write,
 )
 
+import pytest
 
 # ── Referencia (no tocar) ──────────────────────────────────────────────────
 
@@ -36,23 +37,30 @@ def test_scope_allows_write_solo_read():
 
 # ── Fase 1 · Completá los TODO ─────────────────────────────────────────────
 
-def test_can_manage_users_solo_admin():
-    # TODO: assert que can_manage_users("admin") es True
-    # TODO: assert que can_manage_users("viewer") es False
-    assert False, "TODO: completá este test"
+# def test_can_manage_users_solo_admin():
+#   assert can_manage_users("admin") is True
+#    assert can_manage_users("viewer") is False
+
+@pytest.mark.parametrize("role, esperado", [
+    ("admin", True),
+    ("editor", False),
+    ("viewer", False),
+])
+def test_can_delete_por_rol(role, esperado):
+    assert can_delete(role) is esperado
 
 
 def test_can_delete_solo_admin():
-    # TODO: assert que can_delete("admin") es True
-    # TODO: assert que can_delete("editor") es False
-    assert False, "TODO: completá este test"
+    assert can_delete("admin") is True
+    assert can_delete("editor") is False
 
 
 def test_can_edit_dueño_puede():
-    # TODO: el dueño (owner_id == user_id) siempre puede editar lo suyo
-    assert False, "TODO: completá este test"
+    assert can_edit(owner_id=5, user_id=5, role="editor") is True
 
 
 def test_can_edit_editor_no_puede_sobre_ajeno():
-    # TODO: un editor NO puede editar el documento de otro (owner_id != user_id)
-    assert False, "TODO: completá este test"
+    assert can_edit(owner_id=5, user_id=9, role="editor") is False
+
+def test_scope_allows_write_vacio():
+    assert scope_allows_write("") is False
